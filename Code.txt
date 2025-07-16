@@ -1,0 +1,92 @@
+import pygame
+from sys import exit
+import random
+
+pygame.init()
+screen = pygame.display.set_mode((500, 650))
+
+pygame.display.set_caption("Pencil Sharpening Dash")
+
+clock = pygame.time.Clock()
+
+background_surface = pygame.image.load("Background (1).png")
+
+sharpener_surface = pygame.image.load("Sharpener.png")
+sharpener_surface_rect = sharpener_surface.get_rect(center = (250, 300))
+
+pygame.display.set_icon(sharpener_surface)
+
+Pencils_surface = pygame.image.load("Pencils (1).png")
+Pencils_surface_rect = Pencils_surface.get_rect(center = (1050, 300))
+
+cover_up_surface = pygame.image.load("Group 18.png")
+
+up_arrow_surface = pygame.image.load("up.png")
+right_arrow_surface = pygame.image.load("right.png")
+left_arrow_surface = pygame.image.load("left.png")
+down_arrow_surface = pygame.image.load("down.png")
+
+level_displayer = pygame.image.load("Rectangle 214.png")
+
+level_font = pygame.font.Font("C:/Users/MEF/Kev Code/Jersey20-Regular.ttf", 32)
+level_text = level_font.render("Pencil Sharpening Dash", False, "black")
+
+arrow_list = [up_arrow_surface, left_arrow_surface, right_arrow_surface, down_arrow_surface]
+
+start_time = pygame.time.get_ticks()
+
+blitted_surfaces = []
+
+random_arrow = random.choice(arrow_list)
+
+while True:
+    keys = pygame.key.get_pressed()
+    current_time = pygame.time.get_ticks()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            exit()
+
+    screen.blit(background_surface, (0,0))
+
+    screen.blit(Pencils_surface, Pencils_surface_rect)
+
+    screen.blit(sharpener_surface, sharpener_surface_rect)
+
+    screen.blit(cover_up_surface, (0, 271))
+
+    screen.blit(level_displayer, (0, 32))
+
+    screen.blit(level_text, (10, 40))
+
+    if keys[pygame.K_LEFT] and left_arrow_surface in blitted_surfaces:
+        Pencils_surface_rect.x -= 2
+
+    if keys[pygame.K_UP] and up_arrow_surface in blitted_surfaces:
+        Pencils_surface_rect.x -= 2
+
+    if keys[pygame.K_RIGHT] and right_arrow_surface in blitted_surfaces:
+        Pencils_surface_rect.x -= 2
+    
+    if keys[pygame.K_DOWN] and down_arrow_surface in blitted_surfaces:
+        Pencils_surface_rect.x -= 2
+
+    screen.blit(random_arrow, (212, 110))
+    blitted_surfaces.clear()
+    blitted_surfaces.append(random_arrow)
+
+    if current_time - start_time >= 1000:
+        random_arrow = random.choice(arrow_list)
+        random_arrow.set_alpha(0)
+        blitted_surfaces.clear()
+        screen.blit(random_arrow, (212, 110))
+        random_arrow.set_alpha(255)
+        blitted_surfaces.append(random_arrow)
+        start_time = current_time
+
+    if Pencils_surface_rect.x == -814:
+        Pencils_surface_rect.x = 212
+
+    pygame.display.update()
+    clock.tick(60)
